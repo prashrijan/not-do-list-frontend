@@ -59,7 +59,7 @@ function App() {
 
   const deleteTask = async (id) => {
     const response = await axios.delete(`${taskEndPoint}/api/v1/tasks/${id}`);
-
+    window.location.reload();
     if (response.statusText === "OK") {
       setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
     } else {
