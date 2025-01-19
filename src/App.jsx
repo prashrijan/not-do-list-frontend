@@ -45,7 +45,7 @@ function App() {
   const toggleTaskType = async (id) => {
     try {
       const updatedTask = tasks.find((task) => task._id === id);
-      const response = await axios.patch(`${taskEndPoint}/api/v1/tasks${id}`, {
+      const response = await axios.patch(`${taskEndPoint}/api/v1/tasks/${id}`, {
         ...updatedTask,
         isGood: !updatedTask.isGood,
       });
@@ -58,7 +58,7 @@ function App() {
   };
 
   const deleteTask = async (id) => {
-    const response = await axios.delete(`${taskEndPoint}/api/v1/tasks${id}`);
+    const response = await axios.delete(`${taskEndPoint}/api/v1/tasks/${id}`);
 
     if (response.statusText === "OK") {
       setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
@@ -88,13 +88,10 @@ function App() {
   // Toggle isCompleted
   const handleChecked = async (id) => {
     const updatedTask = tasks.find((task) => task._id === id);
-    const response = await axios.patch(
-      `http://localhost:5000/api/v1/tasks/${id}`,
-      {
-        ...updatedTask,
-        isCompleted: !updatedTask.isCompleted,
-      }
-    );
+    const response = await axios.patch(`${taskEndPoint}/api/v1/tasks/${id}`, {
+      ...updatedTask,
+      isCompleted: !updatedTask.isCompleted,
+    });
     if (response.status === 200) {
       setTasks((prevTasks) =>
         prevTasks.map((task) => (task._id === id ? response.data.task : task))
