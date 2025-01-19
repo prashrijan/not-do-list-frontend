@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import DeleteModal from "./Components/DeleteModal";
 import axios from "axios";
 
+const taskEndPoint = import.meta.env.VITE_ENDPOINT;
+
 function App() {
   let [tasks, setTasks] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -16,7 +18,7 @@ function App() {
   // GET request
   const fetchTaskFromApi = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/v1/tasks");
+      const response = await axios.get(`${taskEndPoint}/api/v1/tasks`);
       setTasks(response.data.task);
     } catch (error) {
       console.error("Failed to fetch tasks:", error);
@@ -26,10 +28,7 @@ function App() {
   // POST request
   const storeInDb = async (data) => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/tasks",
-        data
-      );
+      const response = await axios.post(`${taskEndPoint}/api/v1/tasks`, data);
 
       console.log(response);
       setTasks((prevTasks) => [...prevTasks, response.data.task]);
@@ -46,13 +45,10 @@ function App() {
   const toggleTaskType = async (id) => {
     try {
       const updatedTask = tasks.find((task) => task._id === id);
-      const response = await axios.patch(
-        `http://localhost:5000/api/v1/tasks/${id}`,
-        {
-          ...updatedTask,
-          isGood: !updatedTask.isGood,
-        }
-      );
+      const response = await axios.patch(`${taskEndPoint}/api/v1/tasks${id}`, {
+        ...updatedTask,
+        isGood: !updatedTask.isGood,
+      });
       setTasks((prevTasks) =>
         prevTasks.map((task) => (task._id === id ? response.data.task : task))
       );
@@ -62,9 +58,7 @@ function App() {
   };
 
   const deleteTask = async (id) => {
-    const response = await axios.delete(
-      `http://localhost:5000/api/v1/tasks/${id}`
-    );
+    const response = await axios.delete(`${taskEndPoint}/api/v1/tasks${id}`);
 
     if (response.statusText === "OK") {
       setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
